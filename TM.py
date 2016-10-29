@@ -11,20 +11,23 @@ def get_by_name(name):
     data = getdata()
     for key, value in data.items():
         if (key == name):
-            return key, value
+            valueint = int(value)
+            return key, valueint
 
 
 def get_by_id(id):
     data = getdata()
     for key, value in data.items():
-        if (value == id):
-            return key, value
+        valueint = int(value)
+        if (valueint == id):
+            return key, valueint
 
 
 def get_name_by_id(id):
     data = getdata()
     for key, value in data.items():
-        if (value == id):
+        valueint = int(value)
+        if (valueint == id):
             return key
 
 
@@ -32,6 +35,7 @@ def get_id_by_name(name):
     data = getdata()
     for key, value in data.items():
         if (key == name):
-            return value
+            valueint = int(value)
+            return valueint
 
 
