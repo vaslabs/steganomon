@@ -40,11 +40,11 @@ pokemonLostFor2 = 0
 
 def decideWinner(messages):
 	if (pokemonLostFor1 > pokemonLostFor2):
-		messages.append(trainers[trainerIndexes[1]] + " won the fight")
+		messages.append({'trainer':trainers[trainerIndexes[1]] , 'message':trainers[trainerIndexes[1]] + " won the fight"})
 	elif (pokemonLostFor2 > pokemonLostFor1):
-		messages.append(trainers[trainerIndexes[0]] + " won the fight")
+		messages.append({'trainer':trainers[trainerIndexes[0]] , 'message':trainers[trainerIndexes[0]] + " won the fight"})
 	else:
-		messages.append("Match ended in a DRAW")
+		messages.append({'trainer':None, 'message':"Match ended in a DRAW"})
 
 def choosePokemon(pointPair, messages):
 	global trainerIndexes
@@ -57,7 +57,7 @@ def choosePokemon(pointPair, messages):
 	secondPokemon = getPokemon(secondPokemonIndex)
 	pokemonInBattleTrainer1 = [firstPokemon, secondPokemon]
 	trainerName = trainers[trainerIndexes[0]]
-	messages.append(trainer_descriptions["chooses_2_pokemon"].format(trainerName, firstPokemon, secondPokemon))
+	messages.append({'trainer':trainerName, 'message':trainer_descriptions["chooses_2_pokemon"].format(trainerName, firstPokemon, secondPokemon)})
 
 	firstPokemonIndex = secondPair["x"] + 1
 	secondPokemonIndex = secondPair["y"] + 1
@@ -65,7 +65,7 @@ def choosePokemon(pointPair, messages):
 	secondPokemon = getPokemon(secondPokemonIndex)
 	pokemonInBattleTrainer2 = [firstPokemon, secondPokemon]
 	trainerName = trainers[trainerIndexes[1]]
-	messages.append(trainer_descriptions["chooses_2_pokemon"].format(trainerName, firstPokemon, secondPokemon))
+	messages.append({'trainer':trainerName, 'message':trainer_descriptions["chooses_2_pokemon"].format(trainerName, firstPokemon, secondPokemon)})
 
 def removeFromList(pokemonName, pokeList):
 	pokeList.remove(pokemonName)
@@ -79,33 +79,33 @@ def attack_first(messages, letterPointPair):
 
 	pokemonTargetIndex = int(random())
 	pokemonAttackingName = pokemonInBattleTrainer1[0]
-
+	trainerName = trainers[trainerIndexes[0]]
 	if (firstFaints):
-		messages.append(passive_descriptions["faint"].format(pokemonAttackingName))
+		messages.append({'trainer':trainerName, 'message':passive_descriptions["faint"].format(pokemonAttackingName)})
 		removeFromList(pokemonAttackingName, pokemonInBattleTrainer1)
 		nextPokemon = getPokemon(nextAttackIndexOfFirstPokemon)
-		messages.append(trainer_descriptions["chooses_pokemon"].format(trainers[trainerIndexes[0]], nextPokemon))
+		messages.append({'trainer':trainerName, 'message':trainer_descriptions["chooses_pokemon"].format(trainerName, nextPokemon)})
 		pokemonInBattleTrainer1.append(nextPokemon)
 		pokemonLostFor1+=1
 	else:
 		pokemonTargetName = pokemonInBattleTrainer2[pokemonTargetIndex]
 		attack = get_name_by_id(get_any_attack(nextAttackIndexOfFirstPokemon))
-		messages.append(attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName))
+		messages.append({'trainer':trainerName, 'message':attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName)})
 
 
 	pokemonTargetName = pokemonInBattleTrainer2[pokemonTargetIndex-1]
 	pokemonAttackingName = pokemonInBattleTrainer1[1]
 
 	if (secondFaints):
-		messages.append(passive_descriptions["faint"].format(pokemonAttackingName))
+		messages.append({'trainer':trainerName, 'message':passive_descriptions["faint"].format(pokemonAttackingName)})
 		removeFromList(pokemonAttackingName, pokemonInBattleTrainer1)
 		nextPokemon = getPokemon(nextAttackIndexOfSecondPokemon)
-		messages.append(trainer_descriptions["chooses_pokemon"].format(trainers[trainerIndexes[0]], nextPokemon))
+		messages.append({'trainer':trainerName, 'message':trainer_descriptions["chooses_pokemon"].format(trainers[trainerIndexes[0]], nextPokemon)})
 		pokemonInBattleTrainer1.append(nextPokemon)
 		pokemonLostFor1+=1
 	else:
 		attack = get_name_by_id(get_any_attack(nextAttackIndexOfSecondPokemon))
-		messages.append(attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName))
+		messages.append({'trainer':trainerName, 'message':attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName)})
 
 def attack_second(messages, letterPointPair):
 	firstFaints = random() < 0.1
@@ -116,23 +116,24 @@ def attack_second(messages, letterPointPair):
 	pokemonTargetIndex = int(random())
 	pokemonTargetName = pokemonInBattleTrainer1[pokemonTargetIndex]
 	pokemonAttackingName = pokemonInBattleTrainer2[0]
-	
+	trainerName = trainers[trainerIndexes[1]]
+
 	if (firstFaints):
 		messages.append(passive_descriptions["faint"].format(pokemonAttackingName))
 		removeFromList(pokemonAttackingName, pokemonInBattleTrainer2)
 		nextPokemon = getPokemon(nextAttackIndexOfFirstPokemon)
-		messages.append(trainer_descriptions["chooses_pokemon"].format(trainers[trainerIndexes[1]], nextPokemon))
+		messages.append({'trainer':trainerName, 'message':trainer_descriptions["chooses_pokemon"].format(trainerName, nextPokemon)})
 		pokemonInBattleTrainer2.append(nextPokemon)
 		pokemonLostFor2+=1
 	else:
 		attack = get_name_by_id(get_any_attack(nextAttackIndexOfFirstPokemon))
-		messages.append(attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName))
+		messages.append({'trainer':trainerName, 'message':attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName)})
 
 	pokemonTargetName = pokemonInBattleTrainer1[pokemonTargetIndex-1]
 	pokemonAttackingName = pokemonInBattleTrainer2[1]
 
 	if (secondFaints):
-		messages.append(passive_descriptions["faint"].format(pokemonAttackingName))
+		messages.append({'trainer':trainerName, 'message':passive_descriptions["faint"].format(pokemonAttackingName)})
 		removeFromList(pokemonAttackingName,pokemonInBattleTrainer2)
 		nextPokemon = getPokemon(nextAttackIndexOfSecondPokemon)
 		messages.append(trainer_descriptions["chooses_pokemon"].format(trainers[trainerIndexes[1]], nextPokemon))
@@ -140,7 +141,7 @@ def attack_second(messages, letterPointPair):
 		pokemonLostFor2+=1
 	else:
 		attack = get_name_by_id(get_any_attack(nextAttackIndexOfSecondPokemon))
-		messages.append(attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName))
+		messages.append({'trainer':trainerName, 'message':attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName)})
 
 
 
