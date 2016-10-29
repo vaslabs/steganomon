@@ -117,8 +117,8 @@ var LETTER_TO_EDGES map[string][]Edge = map[string][]Edge{
 	"W": []Edge{
 		E_LEFT,
 		E_RIGHT,
-		Edge{X1: 0, Y1: 2, X2: 1, Y2: 0},
-		Edge{X1: 2, Y1: 2, X2: 1, Y2: 0},
+		Edge{X1: 0, Y1: 0, X2: 1, Y2: 1},
+		Edge{X1: 2, Y1: 0, X2: 1, Y2: 1},
 	},
 	"X": []Edge{
 		Edge{X1: 0, Y1: 2, X2: 2, Y2: 0},
