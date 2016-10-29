@@ -11,5 +11,11 @@ def read_data():
 			edges.append(pair)
 	return edges
 
+def read_story():
+	story_file = open('story.json')
+	data = json.load(story_file)
+	story_file.close()
+	return data
+
 
 

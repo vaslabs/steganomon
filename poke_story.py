@@ -119,7 +119,7 @@ def attack_second(messages, letterPointPair):
 	trainerName = trainers[trainerIndexes[1]]
 
 	if (firstFaints):
-		messages.append(passive_descriptions["faint"].format(pokemonAttackingName))
+		messages.append({'trainer':trainerName, 'message':passive_descriptions["faint"].format(pokemonAttackingName)})
 		removeFromList(pokemonAttackingName, pokemonInBattleTrainer2)
 		nextPokemon = getPokemon(nextAttackIndexOfFirstPokemon)
 		messages.append({'trainer':trainerName, 'message':trainer_descriptions["chooses_pokemon"].format(trainerName, nextPokemon)})
@@ -136,7 +136,7 @@ def attack_second(messages, letterPointPair):
 		messages.append({'trainer':trainerName, 'message':passive_descriptions["faint"].format(pokemonAttackingName)})
 		removeFromList(pokemonAttackingName,pokemonInBattleTrainer2)
 		nextPokemon = getPokemon(nextAttackIndexOfSecondPokemon)
-		messages.append(trainer_descriptions["chooses_pokemon"].format(trainers[trainerIndexes[1]], nextPokemon))
+		messages.append({'trainer':trainerName, 'message':trainer_descriptions["chooses_pokemon"].format(trainers[trainerIndexes[1]], nextPokemon)})
 		pokemonInBattleTrainer2.append(nextPokemon)
 		pokemonLostFor2+=1
 	else:
