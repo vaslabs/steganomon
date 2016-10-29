@@ -29,3 +29,35 @@ def getPokemonIndex(pokemonName):
 		return 0
 	return pokemonIndex[pokemonName]
 
+
+attack_descriptions = {
+	"attacking":"{0} uses {1} on {2}",
+	"defending" : "{0} used {1}"
+}
+
+trainer_descriptions = {
+	"pokeball" : "{0} throws pokeball",
+	"chooses_pokemon" : "{0}: {1}, I choose you!",
+	"chooses_2_pokemon" : "{0}: {1}, {2}, I choose you!",
+	"pokemon_return" : "{0}: {1} return!",
+	"challenge" : "{0} challenges {1} to battle!"
+}
+
+passive_descriptions  = {
+	"damage" : "{0} took {1} damage",
+	"neutral" : "{0} is watching carefully",
+	"caught" : "{0} was caught",
+	"break_out" : "{0} broke out from the pokeball",
+	"escape" : "{0} fled!"
+}
+
+trainers = [
+	"Gary", "Ash", "Green", "Red"
+]
+
+attack_tms = [
+	'Cut',
+	'Razor leaf',
+	'Flamethrower',
+	'Watergun'	
+]
