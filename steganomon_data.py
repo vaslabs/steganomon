@@ -12,17 +12,32 @@ def generatePokemonIndex():
 
 pokemonIndex = generatePokemonIndex()
 
-def getPokemon(pokemonId, modulo):
-	if pokemonId <= 0 or pokemonId > 151:
-		return 'Missingno'
+
+def getPokemonMap():
+    numbers1 = []
+    numbers2 = []
+    numbers3 = []
+    for num in range(1, 148):
+        if (num % 3 == 0):
+            numbers3.append(num)
+        elif (num % 2 == 0):
+            numbers2.append(num)
+        else:
+            numbers1.append(num)
+    map = []
+    map.append(numbers1)
+    map.append(numbers2)
+    map.append(numbers3)
+    return map
+
+
+pokemonMap = getPokemonMap()
+
+def getPokemon(multiplier):
+	global pokemonMap
+	pokemonId = random.choice(pokemonMap[multiplier - 1])
 	pokemonOption1 = pokemonNames.get_name(pokemonId)
-	nextPokemonIndex = pokemonId+modulo
-	if (nextPokemonIndex > 148):
-		return pokemonOption1
-	pokemonOption2 = pokemonNames.get_name(nextPokemonIndex)
-	if (random() < 0.5):
-		return pokemonOption1
-	return pokemonOption2
+	return pokemonOption1
 
 def getPokemonIndex(pokemonName):
 	if (not pokemonName in pokemonIndex):
