@@ -1,6 +1,7 @@
 #!/usr/bin/python
 from steganomon_data import *
 from random import random
+from tm import get_any_attack, get_name_by_id
 
 trainerIndexes = []
 
@@ -12,9 +13,11 @@ def generateStory(letterPoints):
 			messages.append(startingPoint())
 			storyStarted = True
 			choosePokemon(letterPointPair, messages)
+		
 		else:
 			attack_first(messages, letterPointPair)
 			attack_second(messages, letterPointPair)
+
 
 	print messages
 
@@ -55,34 +58,64 @@ def choosePokemon(pointPair, messages):
 
 
 def attack_first(messages, letterPointPair):
-	nextAttackIndexOfFirstPokemon = letterPointPair[0]["x"]
-	nextAttackIndexOfSecondPokemon = letterPointPair[0]["y"]
+	firstFaints = random() < 0.1
+	secondFaints = random() < 0.1
+	nextAttackIndexOfFirstPokemon = letterPointPair[0]["x"] + 1
+	nextAttackIndexOfSecondPokemon = letterPointPair[0]["y"] + 1
 	global pokemonInBattleTrainer1, pokemonInBattleTrainer2
+
 	pokemonTargetIndex = int(random())
-	pokemonTargetName = pokemonInBattleTrainer2[pokemonTargetIndex]
 	pokemonAttackingName = pokemonInBattleTrainer1[0]
-	attack = attack_tms[nextAttackIndexOfFirstPokemon]
-	messages.append(attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName))
+
+	if (firstFaints):
+		messages.append(passive_descriptions["faint"].format(pokemonAttackingName))
+		nextPokemon = pokemonNames.get_name(nextAttackIndexOfFirstPokemon)
+		messages.append(trainer_descriptions["chooses_pokemon"].format(trainers[trainerIndexes[0]], nextPokemon))
+	else:
+		pokemonTargetName = pokemonInBattleTrainer2[pokemonTargetIndex]
+		attack = get_name_by_id(get_any_attack(nextAttackIndexOfFirstPokemon))
+		messages.append(attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName))
+
 
 	pokemonTargetName = pokemonInBattleTrainer2[pokemonTargetIndex-1]
 	pokemonAttackingName = pokemonInBattleTrainer1[1]
-	attack = attack_tms[nextAttackIndexOfSecondPokemon]
-	messages.append(attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName))
+
+	if (secondFaints):
+		messages.append(passive_descriptions["faint"].format(pokemonAttackingName))
+		nextPokemon = pokemonNames.get_name(nextAttackIndexOfSecondPokemon)
+		messages.append(trainer_descriptions["chooses_pokemon"].format(trainers[trainerIndexes[0]], nextPokemon))
+	else:
+		attack = get_name_by_id(get_any_attack(nextAttackIndexOfSecondPokemon))
+		messages.append(attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName))
 
 def attack_second(messages, letterPointPair):
-	nextAttackIndexOfFirstPokemon = letterPointPair[1]["x"]
-	nextAttackIndexOfSecondPokemon = letterPointPair[1]["y"]
+	firstFaints = random() < 0.1
+	secondFaints = random() < 0.1
+	nextAttackIndexOfFirstPokemon = letterPointPair[1]["x"] + 1
+	nextAttackIndexOfSecondPokemon = letterPointPair[1]["y"] + 1
 	global pokemonInBattleTrainer1, pokemonInBattleTrainer2
 	pokemonTargetIndex = int(random())
 	pokemonTargetName = pokemonInBattleTrainer1[pokemonTargetIndex]
 	pokemonAttackingName = pokemonInBattleTrainer2[0]
-	attack = attack_tms[nextAttackIndexOfFirstPokemon]
-	messages.append(attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName))
+	
+	if (firstFaints):
+		messages.append(passive_descriptions["faint"].format(pokemonAttackingName))
+		nextPokemon = pokemonNames.get_name(nextAttackIndexOfFirstPokemon)
+		messages.append(trainer_descriptions["chooses_pokemon"].format(trainers[trainerIndexes[1]], nextPokemon))
+	else:
+		attack = get_name_by_id(get_any_attack(nextAttackIndexOfFirstPokemon))
+		messages.append(attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName))
 
 	pokemonTargetName = pokemonInBattleTrainer1[pokemonTargetIndex-1]
 	pokemonAttackingName = pokemonInBattleTrainer2[1]
-	attack = attack_tms[nextAttackIndexOfSecondPokemon]
-	messages.append(attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName))
+
+	if (secondFaints):
+		messages.append(passive_descriptions["faint"].format(pokemonAttackingName))
+		nextPokemon = pokemonNames.get_name(nextAttackIndexOfSecondPokemon)
+		messages.append(trainer_descriptions["chooses_pokemon"].format(trainers[trainerIndexes[1]], nextPokemon))
+	else:
+		attack = get_name_by_id(get_any_attack(nextAttackIndexOfSecondPokemon))
+		messages.append(attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName))
 
 
 

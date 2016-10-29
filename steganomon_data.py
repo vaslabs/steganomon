@@ -48,16 +48,10 @@ passive_descriptions  = {
 	"neutral" : "{0} is watching carefully",
 	"caught" : "{0} was caught",
 	"break_out" : "{0} broke out from the pokeball",
-	"escape" : "{0} fled!"
+	"escape" : "{0} fled!",
+	"faint":"{0} fainted!"
 }
 
 trainers = [
 	"Gary", "Ash", "Green", "Red"
-]
-
-attack_tms = [
-	'Cut',
-	'Razor leaf',
-	'Flamethrower',
-	'Watergun'	
 ]
