@@ -18,19 +18,29 @@
       <script src="story.js"></script>
 
      <div class="col s12 m7">
-    <h2 class="header">Horizontal Card</h2>
+    <h2 class="header">Pokemon battle!!!</h2>
        <div data-bind="foreach:story_messages">
 
         <div class="card horizontal">
           <div class="card-image">
-              <img data-bind="attr:{src: $data.trainer + '.jpg'}">
+              <img data-bind="attr:{src: $data.trainer == null ? 'pokemon_images/Oak.gif' : $data.trainer + '.jpg'}">
           </div>
           <div class="card-stacked">
             <div class="card-content">
               <p data-bind="text: $data.message"></p>
             </div>
             <div class="card-action">
-              <img data-bind="attr:{src: $data.message.indexOf('uses') > 0 ? $data.message.substring(0,$data.message.indexOf('uses')).toLowerCase()+'.png':'undefined.png'}">
+            	    <!-- ko if: $data.message.indexOf(' uses ') >= 0 -->
+
+              			<img data-bind="attr:{src: 'pokemon_images/' + $data.message.substring(0,$data.message.indexOf(' uses')).toLowerCase()+'.png'}">
+   				 	<!-- /ko -->
+   				 	<!-- ko if: $data.message.indexOf(', I choose you!') >= 0 -->
+   				 			<!-- ko if: $data.message.substring(0,$data.message.indexOf(', I choose you!')).split(', ').length >= 2 -->
+   				 				<img data-bind="attr:{src: 'pokemon_images/' + $data.message.substring(0,$data.message.indexOf(', I choose you!')).split(', ')[1].toLowerCase()+'.png'}">
+				 				<img data-bind="attr:{src: 'pokemon_images/' + 	$data.message.substring(0,$data.message.indexOf(', I choose you!')).split(', ')[0].split(': ')[1].toLowerCase()+'.png'}">
+
+   				 			<!-- /ko -->
+   				 	<!-- /ko -->
             </div>
           </div>
         </div>
