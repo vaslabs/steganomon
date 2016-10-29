@@ -2,11 +2,18 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"encoding/json"
 	"flag"
 	"fmt"
+	"image"
+	"image/color"
+	"image/png"
+	"math"
 	"os"
 	"strings"
+
+	"github.com/llgcode/draw2d/draw2dimg"
 )
 
 type Edge struct {
@@ -38,7 +45,7 @@ var LETTER_TO_EDGES map[string][]Edge = map[string][]Edge{
 	},
 	"B": []Edge{
 		E_TOP, E_LEFT, E_BOTTOM,
-		Edge{X1: 2, Y1: 2, X2: 0, Y2: 1},
+		Edge{X1: 0, Y1: 1, X2: 2, Y2: 2},
 		Edge{X1: 0, Y1: 1, X2: 2, Y2: 0},
 	},
 	"C": []Edge{
@@ -50,7 +57,7 @@ var LETTER_TO_EDGES map[string][]Edge = map[string][]Edge{
 		Edge{X1: 2, Y1: 1, X2: 0, Y2: 0},
 	},
 	"E": []Edge{
-		E_LEFT, E_TOP, E_MIDDLE_V, E_BOTTOM,
+		E_LEFT, E_TOP, E_MIDDLE_H, E_BOTTOM,
 	},
 	"F": []Edge{
 		E_LEFT, E_TOP, E_MIDDLE_H,
@@ -99,6 +106,7 @@ var LETTER_TO_EDGES map[string][]Edge = map[string][]Edge{
 		E_TOP,
 		E_MIDDLE_H,
 		Edge{X1: 0, Y1: 1, X2: 2, Y2: 0},
+		Edge{X1: 2, Y1: 1, X2: 2, Y2: 2},
 	},
 	"S": []Edge{
 		E_TOP,
@@ -145,6 +153,9 @@ var LETTER_TO_EDGES map[string][]Edge = map[string][]Edge{
 	},
 }
 
+const MAX_WIDTH = 600
+const LINE_HEIGHT = 30
+
 func getLetterEdges(ch string) []Edge {
 	e, ok := LETTER_TO_EDGES[strings.ToUpper(ch)]
 	if !ok {
@@ -177,8 +188,111 @@ func textToEdges() {
 	}
 }
 
-func edgesToImage() {
+func normalizeEdge(e Edge) Edge {
+	return Edge{
+		X1: e.X1, X2: e.X2, Y1: 2 - e.Y1, Y2: 2 - e.Y2,
+	}
+}
 
+func drawEdgeDots(m *image.RGBA, ee Edge, rollingX int, rollingY int, W_MULTIPLIER int) {
+	//fmt.Println(e)
+	e := normalizeEdge(ee)
+	x1 := e.X1 * W_MULTIPLIER
+	x2 := e.X2 * W_MULTIPLIER
+	y1 := e.Y1 * W_MULTIPLIER
+	y2 := e.Y2 * W_MULTIPLIER
+	m.Set(rollingX+x1, rollingY+y1, color.RGBA{0, 0, 0, 255})
+	m.Set(rollingX+x2, rollingY+y2, color.RGBA{0, 0, 0, 255})
+}
+
+func edgesToImageDots(letters []ResultElement) *image.RGBA {
+	W_MULTIPLIER := 1
+	L_WIDTH := W_MULTIPLIER*3 + 5
+	w := len(letters) * L_WIDTH
+	h := LINE_HEIGHT
+	m := image.NewRGBA(image.Rect(0, 0, w, h))
+
+	rollingY := 5
+	rollingX := 0
+	for _, l := range letters {
+		for _, e := range l.Edges {
+			drawEdgeDots(m, e, rollingX, rollingY, W_MULTIPLIER)
+		}
+		rollingX += L_WIDTH
+	}
+
+	var b bytes.Buffer
+	png.Encode(&b, m)
+	fmt.Println(b.String())
+
+	return m
+}
+
+func drawEdgeLine(m *draw2dimg.GraphicContext, ee Edge, rollingX int, rollingY int, W_MULTIPLIER int) {
+	//fmt.Println(e)
+	e := normalizeEdge(ee)
+	x1 := rollingX + e.X1*W_MULTIPLIER
+	x2 := rollingX + e.X2*W_MULTIPLIER
+	y1 := rollingY + e.Y1*W_MULTIPLIER
+	y2 := rollingY + e.Y2*W_MULTIPLIER
+
+	m.MoveTo(float64(x1), float64(y1))
+	m.LineTo(float64(x2), float64(y2))
+	m.Close()
+	m.FillStroke()
+}
+
+func edgesToImageLines(letters []ResultElement) *image.RGBA {
+	W_MULTIPLIER := 5
+	L_WIDTH := W_MULTIPLIER*3 + 5
+
+	totalw := len(letters) * L_WIDTH
+	rows := int(math.Ceil(float64(totalw) / float64(MAX_WIDTH)))
+	w := MAX_WIDTH
+
+	h := LINE_HEIGHT * rows
+	m := image.NewRGBA(image.Rect(0, 0, w, h))
+	gc := draw2dimg.NewGraphicContext(m)
+
+	// Set some properties
+	gc.SetStrokeColor(color.RGBA{0x44, 0x44, 0x44, 0xff})
+	gc.SetLineWidth(1)
+
+	rollingY := 5
+	rollingX := 5
+	for _, l := range letters {
+		for _, e := range l.Edges {
+			drawEdgeLine(gc, e, rollingX, rollingY, W_MULTIPLIER)
+		}
+		rollingX += L_WIDTH
+		if rollingX >= MAX_WIDTH {
+			rollingY += LINE_HEIGHT
+			rollingX = 5
+		}
+	}
+
+	var b bytes.Buffer
+	png.Encode(&b, m)
+	fmt.Println(b.String())
+
+	return m
+}
+
+func readEdges() []ResultElement {
+	result := make([]ResultElement, 0)
+
+	bio := bufio.NewReader(os.Stdin)
+	sc := bufio.NewScanner(bio)
+	for sc.Scan() {
+		line := sc.Text()
+		e := make([]ResultElement, 0)
+		if err := json.Unmarshal([]byte(line), &e); err != nil {
+			panic(err)
+		}
+		result = append(result, e...)
+	}
+
+	return result
 }
 
 func main() {
@@ -189,6 +303,6 @@ func main() {
 	if *textToEdgesF {
 		textToEdges()
 	} else if *edgesToImageF {
-		edgesToImage()
+		edgesToImageLines(readEdges())
 	}
 }
