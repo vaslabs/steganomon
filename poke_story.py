@@ -18,8 +18,8 @@ def generateStory(letterPoints):
 			attack_first(messages, letterPointPair)
 			attack_second(messages, letterPointPair)
 
-
-	print messages
+	decideWinner(messages)
+	return messages
 
 
 
@@ -35,6 +35,17 @@ def startingPoint():
 pokemonInBattleTrainer1 = []
 pokemonInBattleTrainer2 = []
 
+pokemonLostFor1 = 0
+pokemonLostFor2 = 0
+
+def decideWinner(messages):
+	if (pokemonLostFor1 > pokemonLostFor2):
+		messages.append(trainers[trainerIndexes[1]] + " won the fight")
+	elif (pokemonLostFor2 > pokemonLostFor1):
+		messages.append(trainers[trainerIndexes[0]] + " won the fight")
+	else:
+		messages.append("Match ended in a DRAW")
+
 def choosePokemon(pointPair, messages):
 	global trainerIndexes
 	global pokemonInBattleTrainer1, pokemonInBattleTrainer2
@@ -42,35 +53,40 @@ def choosePokemon(pointPair, messages):
 	secondPair = pointPair[1]
 	firstPokemonIndex = firstPair["x"] + 1
 	secondPokemonIndex = firstPair["y"] + 1
-	firstPokemon = pokemonNames.get_name(firstPokemonIndex)
-	secondPokemon = pokemonNames.get_name(secondPokemonIndex)
+	firstPokemon = getPokemon(firstPokemonIndex)
+	secondPokemon = getPokemon(secondPokemonIndex)
 	pokemonInBattleTrainer1 = [firstPokemon, secondPokemon]
 	trainerName = trainers[trainerIndexes[0]]
 	messages.append(trainer_descriptions["chooses_2_pokemon"].format(trainerName, firstPokemon, secondPokemon))
 
 	firstPokemonIndex = secondPair["x"] + 1
 	secondPokemonIndex = secondPair["y"] + 1
-	firstPokemon = pokemonNames.get_name(firstPokemonIndex)
-	secondPokemon = pokemonNames.get_name(secondPokemonIndex)
+	firstPokemon = getPokemon(firstPokemonIndex)
+	secondPokemon = getPokemon(secondPokemonIndex)
 	pokemonInBattleTrainer2 = [firstPokemon, secondPokemon]
 	trainerName = trainers[trainerIndexes[1]]
 	messages.append(trainer_descriptions["chooses_2_pokemon"].format(trainerName, firstPokemon, secondPokemon))
 
+def removeFromList(pokemonName, pokeList):
+	pokeList.remove(pokemonName)
 
 def attack_first(messages, letterPointPair):
 	firstFaints = random() < 0.1
 	secondFaints = random() < 0.1
 	nextAttackIndexOfFirstPokemon = letterPointPair[0]["x"] + 1
 	nextAttackIndexOfSecondPokemon = letterPointPair[0]["y"] + 1
-	global pokemonInBattleTrainer1, pokemonInBattleTrainer2
+	global pokemonInBattleTrainer1, pokemonInBattleTrainer2, pokemonLostFor1
 
 	pokemonTargetIndex = int(random())
 	pokemonAttackingName = pokemonInBattleTrainer1[0]
 
 	if (firstFaints):
 		messages.append(passive_descriptions["faint"].format(pokemonAttackingName))
-		nextPokemon = pokemonNames.get_name(nextAttackIndexOfFirstPokemon)
+		removeFromList(pokemonAttackingName, pokemonInBattleTrainer1)
+		nextPokemon = getPokemon(nextAttackIndexOfFirstPokemon)
 		messages.append(trainer_descriptions["chooses_pokemon"].format(trainers[trainerIndexes[0]], nextPokemon))
+		pokemonInBattleTrainer1.append(nextPokemon)
+		pokemonLostFor1+=1
 	else:
 		pokemonTargetName = pokemonInBattleTrainer2[pokemonTargetIndex]
 		attack = get_name_by_id(get_any_attack(nextAttackIndexOfFirstPokemon))
@@ -82,8 +98,11 @@ def attack_first(messages, letterPointPair):
 
 	if (secondFaints):
 		messages.append(passive_descriptions["faint"].format(pokemonAttackingName))
-		nextPokemon = pokemonNames.get_name(nextAttackIndexOfSecondPokemon)
+		removeFromList(pokemonAttackingName, pokemonInBattleTrainer1)
+		nextPokemon = getPokemon(nextAttackIndexOfSecondPokemon)
 		messages.append(trainer_descriptions["chooses_pokemon"].format(trainers[trainerIndexes[0]], nextPokemon))
+		pokemonInBattleTrainer1.append(nextPokemon)
+		pokemonLostFor1+=1
 	else:
 		attack = get_name_by_id(get_any_attack(nextAttackIndexOfSecondPokemon))
 		messages.append(attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName))
@@ -93,15 +112,18 @@ def attack_second(messages, letterPointPair):
 	secondFaints = random() < 0.1
 	nextAttackIndexOfFirstPokemon = letterPointPair[1]["x"] + 1
 	nextAttackIndexOfSecondPokemon = letterPointPair[1]["y"] + 1
-	global pokemonInBattleTrainer1, pokemonInBattleTrainer2
+	global pokemonInBattleTrainer1, pokemonInBattleTrainer2, pokemonLostFor2
 	pokemonTargetIndex = int(random())
 	pokemonTargetName = pokemonInBattleTrainer1[pokemonTargetIndex]
 	pokemonAttackingName = pokemonInBattleTrainer2[0]
 	
 	if (firstFaints):
 		messages.append(passive_descriptions["faint"].format(pokemonAttackingName))
-		nextPokemon = pokemonNames.get_name(nextAttackIndexOfFirstPokemon)
+		removeFromList(pokemonAttackingName, pokemonInBattleTrainer2)
+		nextPokemon = getPokemon(nextAttackIndexOfFirstPokemon)
 		messages.append(trainer_descriptions["chooses_pokemon"].format(trainers[trainerIndexes[1]], nextPokemon))
+		pokemonInBattleTrainer2.append(nextPokemon)
+		pokemonLostFor2+=1
 	else:
 		attack = get_name_by_id(get_any_attack(nextAttackIndexOfFirstPokemon))
 		messages.append(attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName))
@@ -111,8 +133,11 @@ def attack_second(messages, letterPointPair):
 
 	if (secondFaints):
 		messages.append(passive_descriptions["faint"].format(pokemonAttackingName))
-		nextPokemon = pokemonNames.get_name(nextAttackIndexOfSecondPokemon)
+		removeFromList(pokemonAttackingName,pokemonInBattleTrainer2)
+		nextPokemon = getPokemon(nextAttackIndexOfSecondPokemon)
 		messages.append(trainer_descriptions["chooses_pokemon"].format(trainers[trainerIndexes[1]], nextPokemon))
+		pokemonInBattleTrainer2.append(nextPokemon)
+		pokemonLostFor2+=1
 	else:
 		attack = get_name_by_id(get_any_attack(nextAttackIndexOfSecondPokemon))
 		messages.append(attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName))

@@ -1,5 +1,6 @@
 #!/usr/bin/python
 from pokemonNames.pokemonNames import PokemonNames
+import random as Random
 from random import random
 pokemonNames = PokemonNames()
 
@@ -35,7 +36,7 @@ pokemonMap = getPokemonMap()
 
 def getPokemon(multiplier):
 	global pokemonMap
-	pokemonId = random.choice(pokemonMap[multiplier - 1])
+	pokemonId = Random.choice(pokemonMap[multiplier - 1])
 	pokemonOption1 = pokemonNames.get_name(pokemonId)
 	return pokemonOption1
 
