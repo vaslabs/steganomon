@@ -14,6 +14,39 @@
       <!--Import jQuery before materialize.js-->
       <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 	  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
+      <script src="story.js"></script>
+
+     <div class="col s12 m7">
+    <h2 class="header">Horizontal Card</h2>
+       <div data-bind="foreach:story_messages">
+
+        <div class="card horizontal">
+          <div class="card-image">
+              <img data-bind="attr:{src: $data.trainer + '.jpg'}">
+          </div>
+          <div class="card-stacked">
+            <div class="card-content">
+              <p data-bind="text: $data.message"></p>
+            </div>
+            <div class="card-action">
+              <img data-bind="attr:{src: $data.message.indexOf('uses') > 0 ? $data.message.substring(0,$data.message.indexOf('uses')).toLowerCase()+'.png':'undefined.png'}">
+            </div>
+          </div>
+        </div>
+    </div>
+
+  </div>
+
+      <script type="text/javascript">
+    ko.applyBindings({
+        story_messages: story
+    });
+</script>
+
+
+
+
     </body>
   </html>
         
