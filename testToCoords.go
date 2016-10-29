@@ -153,7 +153,7 @@ func getLetterEdges(ch string) []Edge {
 	return e
 }
 
-func textToPoints() {
+func textToEdges() {
 	bio := bufio.NewReader(os.Stdin)
 	sc := bufio.NewScanner(bio)
 
@@ -182,12 +182,12 @@ func edgesToImage() {
 }
 
 func main() {
-	textToPointsF := flag.Bool("t2p", false, "Use to do text to edges transformation")
+	textToEdgesF := flag.Bool("t2e", false, "Use to do text to edges transformation")
 	edgesToImageF := flag.Bool("e2i", false, "Use to do edges to image transformation")
 	flag.Parse()
 
-	if *textToPointsF {
-		textToPoints()
+	if *textToEdgesF {
+		textToEdges()
 	} else if *edgesToImageF {
 		edgesToImage()
 	}
