@@ -6,7 +6,7 @@ pokemonNames = PokemonNames()
 
 def generatePokemonIndex():
 	pokemonIndexDict = {}
-	for i in range(1,151):
+	for i in range(1,150):
 		pokemonIndexDict[pokemonNames.get_name(i)] = i
 
 	return pokemonIndexDict
