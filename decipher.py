@@ -1,8 +1,8 @@
-from poke_utils import read_story
+from poke_utils import read_story_dec
 from steganomon_data import getPokemonIndex
 from tm import get_id_by_name
 import json
-story = read_story()
+story = read_story_dec()
 
 def getRealIndex(index):
 	if (index%3 == 0):

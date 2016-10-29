@@ -19,5 +19,9 @@ def read_story():
 	story_file.close()
 	return data
 
-
+def read_story_dec():
+	story_file = open('story_dec.json')
+	data = json.load(story_file)
+	story_file.close()
+	return data
 
