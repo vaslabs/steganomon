@@ -6,9 +6,11 @@ def getdata():
         d = json.load(json_data)
         return d
 
+data = getdata()
+
 
 def get_by_name(name):
-    data = getdata()
+    global data
     for key, value in data.items():
         if (key == name):
             valueint = int(value)
@@ -16,7 +18,7 @@ def get_by_name(name):
 
 
 def get_by_id(id):
-    data = getdata()
+    global data
     for key, value in data.items():
         valueint = int(value)
         if (valueint == id):
@@ -24,7 +26,7 @@ def get_by_id(id):
 
 
 def get_name_by_id(id):
-    data = getdata()
+    global data
     for key, value in data.items():
         valueint = int(value)
         if (valueint == id):
@@ -32,7 +34,7 @@ def get_name_by_id(id):
 
 
 def get_id_by_name(name):
-    data = getdata()
+    global data
     for key, value in data.items():
         if (key == name):
             valueint = int(value)
