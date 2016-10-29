@@ -1,6 +1,7 @@
 from poke_utils import read_story
 from steganomon_data import getPokemonIndex
 from tm import get_id_by_name
+import json
 story = read_story()
 
 def getRealIndex(index):
@@ -37,11 +38,15 @@ def parsePokemonNameInChoice(message):
 	endIndex = message.index(", I choose you!")
 	return message[startIndex:endIndex]
 
+def isMoodStatement(message):
+	return ' is angry!' in message or ' is STRONG' in message
+
 def parseStory(story):
 	firstPoint = readEntryPoint(story[1]["message"])
 	secondPoint = readEntryPoint(story[2]["message"])
-	print firstPoint, secondPoint,
 	nextPoint={}
+	points = [firstPoint, secondPoint]
+	result = []
 	for entry in story[3:]:
 		message = entry["message"]
 		if isAttack(message):
@@ -49,7 +54,7 @@ def parseStory(story):
 			attackRealIndex = getRealIndex(get_id_by_name(attackName))
 			if ('x' in nextPoint):
 				nextPoint['y'] = attackRealIndex
-				print nextPoint,
+				points.append(nextPoint)
 				nextPoint = {}
 			else:
 				nextPoint['x'] = attackRealIndex
@@ -58,16 +63,21 @@ def parseStory(story):
 			pokemonRealIndex = getRealIndex(getPokemonIndex(pokemonName))
 			if ('x' in nextPoint):
 				nextPoint['y'] = pokemonRealIndex
-				print nextPoint,
+				points.append(nextPoint)
 				nextPoint = {}
 			else:
-				nextPoint['x'] = pokemonRealIndex			
+				nextPoint['x'] = pokemonRealIndex
+		elif isMoodStatement(message):
+			result.append(points)
+			points = []
+	if (len(points)>0):
+		result.append(points)
+	return result
 
 
 
-
-parseStory(story)
-
+result = parseStory(story)
+print json.dumps(result)
 
 
 
