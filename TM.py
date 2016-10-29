@@ -19,3 +19,19 @@ def get_by_id(id):
     for key, value in data.items():
         if (value == id):
             return key, value
+
+
+def get_name_by_id(id):
+    data = getdata()
+    for key, value in data.items():
+        if (value == id):
+            return key
+
+
+def get_id_by_name(name):
+    data = getdata()
+    for key, value in data.items():
+        if (key == name):
+            return value
+
+
