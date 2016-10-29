@@ -8,6 +8,12 @@
 
       <!--Let browser know website is optimized for mobile-->
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <style>
+      	img.faint {
+		    -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+		    filter: grayscale(100%);
+		}
+      </style>
     </head>
 
     <body>
@@ -17,7 +23,7 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
       <script src="story.js"></script>
 
-     <div class="col s12 m7">
+     <div class="col s12 m6">
     <h2 class="header">Pokemon battle!!!</h2>
        <div data-bind="foreach:story_messages">
 
@@ -38,9 +44,17 @@
    				 			<!-- ko if: $data.message.substring(0,$data.message.indexOf(', I choose you!')).split(', ').length >= 2 -->
    				 				<img data-bind="attr:{src: 'pokemon_images/' + $data.message.substring(0,$data.message.indexOf(', I choose you!')).split(', ')[1].toLowerCase()+'.png'}">
 				 				<img data-bind="attr:{src: 'pokemon_images/' + 	$data.message.substring(0,$data.message.indexOf(', I choose you!')).split(', ')[0].split(': ')[1].toLowerCase()+'.png'}">
-
+   				 			<!-- /ko -->
+   				 			<!-- ko ifnot: $data.message.substring(0,$data.message.indexOf(', I choose you!')).split(', ').length >= 2 -->
+   				 				<img data-bind="attr:{src: 'pokemon_images/' + $data.message.substring(0,message.indexOf(', I choose you!')).split(': ')[1].toLowerCase()+'.png'}">
    				 			<!-- /ko -->
    				 	<!-- /ko -->
+
+            	    <!-- ko if: $data.message.indexOf(' fainted!') >= 0 -->
+            	    	<img class="faint" data-bind="attr:{src: 'pokemon_images/' + $data.message.substring(0,$data.message.indexOf(' fainted!')).toLowerCase()+'.png'}">
+            	    <!-- /ko -->
+
+
             </div>
           </div>
         </div>
