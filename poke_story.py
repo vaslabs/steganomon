@@ -30,7 +30,7 @@ def startingPoint():
 		otherTrainerIndex = int(round(random()*3))
 	global trainerIndexes 
 	trainerIndexes = [trainer1Index, otherTrainerIndex]
-	return trainer_descriptions["challenge"].format(trainers[trainer1Index], trainers[otherTrainerIndex])
+	return {'trainer':trainers[trainer1Index], 'message':trainer_descriptions["challenge"].format(trainers[trainer1Index], trainers[otherTrainerIndex])}
 
 pokemonInBattleTrainer1 = []
 pokemonInBattleTrainer2 = []
