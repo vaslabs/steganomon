@@ -16,6 +16,11 @@ type Edge struct {
 	Y2 int `json:"y2"`
 }
 
+type ResultElement struct {
+	Letter string `json:"letter"`
+	Edges  []Edge `json:"edges"`
+}
+
 var E_TOP = Edge{X1: 0, Y1: 2, X2: 2, Y2: 2}
 var E_BOTTOM = Edge{X1: 0, Y1: 0, X2: 2, Y2: 0}
 var E_BOTTOM_LEFT = Edge{X1: 0, Y1: 0, X2: 1, Y2: 0}
@@ -154,10 +159,14 @@ func textToPoints() {
 
 	for sc.Scan() {
 		line := sc.Text()
-		result := make(map[string][]Edge)
-		for i, c := range line {
-			result[string(c)] = getLetterEdges(string(c))
-			fmt.Println(i, string(c), getLetterEdges(string(c)))
+		result := make([]ResultElement, 0)
+		for _, c := range line {
+			r := ResultElement{
+				Letter: string(c),
+				Edges:  getLetterEdges(string(c)),
+			}
+			result = append(result, r)
+			//fmt.Println(i, string(c), getLetterEdges(string(c)))
 		}
 
 		b, err := json.Marshal(result)
