@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -147,7 +148,7 @@ func getLetterEdges(ch string) []Edge {
 	return e
 }
 
-func main() {
+func textToPoints() {
 	bio := bufio.NewReader(os.Stdin)
 	sc := bufio.NewScanner(bio)
 
@@ -164,5 +165,21 @@ func main() {
 			panic(err)
 		}
 		fmt.Println(string(b))
+	}
+}
+
+func edgesToImage() {
+
+}
+
+func main() {
+	textToPointsF := flag.Bool("t2p", false, "Use to do text to edges transformation")
+	edgesToImageF := flag.Bool("e2i", false, "Use to do edges to image transformation")
+	flag.Parse()
+
+	if *textToPointsF {
+		textToPoints()
+	} else if *edgesToImageF {
+		edgesToImage()
 	}
 }
