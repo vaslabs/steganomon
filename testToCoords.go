@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -13,6 +14,11 @@ type Edge struct {
 	Y1 int `json:"y1"`
 	X2 int `json:"x2"`
 	Y2 int `json:"y2"`
+}
+
+type ResultElement struct {
+	Letter string `json:"letter"`
+	Edges  []Edge `json:"edges"`
 }
 
 var E_TOP = Edge{X1: 0, Y1: 2, X2: 2, Y2: 2}
@@ -147,16 +153,20 @@ func getLetterEdges(ch string) []Edge {
 	return e
 }
 
-func main() {
+func textToEdges() {
 	bio := bufio.NewReader(os.Stdin)
 	sc := bufio.NewScanner(bio)
 
 	for sc.Scan() {
 		line := sc.Text()
-		result := make(map[string][]Edge)
-		for i, c := range line {
-			result[string(c)] = getLetterEdges(string(c))
-			fmt.Println(i, string(c), getLetterEdges(string(c)))
+		result := make([]ResultElement, 0)
+		for _, c := range line {
+			r := ResultElement{
+				Letter: string(c),
+				Edges:  getLetterEdges(string(c)),
+			}
+			result = append(result, r)
+			//fmt.Println(i, string(c), getLetterEdges(string(c)))
 		}
 
 		b, err := json.Marshal(result)
@@ -164,5 +174,21 @@ func main() {
 			panic(err)
 		}
 		fmt.Println(string(b))
+	}
+}
+
+func edgesToImage() {
+
+}
+
+func main() {
+	textToEdgesF := flag.Bool("t2e", false, "Use to do text to edges transformation")
+	edgesToImageF := flag.Bool("e2i", false, "Use to do edges to image transformation")
+	flag.Parse()
+
+	if *textToEdgesF {
+		textToEdges()
+	} else if *edgesToImageF {
+		edgesToImage()
 	}
 }
