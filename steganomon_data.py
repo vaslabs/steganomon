@@ -65,7 +65,9 @@ passive_descriptions  = {
 	"caught" : "{0} was caught",
 	"break_out" : "{0} broke out from the pokeball",
 	"escape" : "{0} fled!",
-	"faint":"{0} fainted!"
+	"faint":"{0} fainted!",
+	"angry":"{0} is angry!",
+	"strength" : "{0} is STRONG"
 }
 
 trainers = [

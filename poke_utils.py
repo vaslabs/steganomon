@@ -5,11 +5,13 @@ def read_data():
 	data = json.load(data_file)
 	data_file.close()
 	edges = []
+	letterEdges = []
 	for letter_obj in data:
 		for edge in letter_obj["edges"]:
 			pair = [{'x':edge["x1"], 'y':edge['y1']}, {'x':edge['x2'], 'y':edge['y2']}]
 			edges.append(pair)
-	return edges
+		letterEdges.append(len(letter_obj["edges"]))
+	return edges, letterEdges
 
 def read_story():
 	story_file = open('story.json')

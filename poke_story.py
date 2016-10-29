@@ -5,7 +5,13 @@ from tm import get_any_attack, get_name_by_id
 
 trainerIndexes = []
 
-def generateStory(letterPoints):
+letterLengthCounter = 0
+letterLengths = []
+letterPointer = 0
+
+def generateStory(letterPoints, ll):
+	global letterLengths, letterLengthCounter, letterPointer
+	letterLengths = ll
 	storyStarted = False;
 	messages = []
 	for letterPointPair in letterPoints:
@@ -17,11 +23,21 @@ def generateStory(letterPoints):
 		else:
 			attack_first(messages, letterPointPair)
 			attack_second(messages, letterPointPair)
-
+			letterLengthCounter+=1
+			if (letterLengthCounter >= letterLengths[letterPointer]):
+				letterLengthCounter = 0
+				letterPointer+=1
+				addRandomSentence(messages)
 	decideWinner(messages)
 	return messages
 
 
+def addRandomSentence(messages):
+	modes = ["angry", "strength"]
+	chosenMode = int(round(random()*len(modes)-1))
+	trainerName = trainers[trainerIndexes[int(random())]]
+	message = passive_descriptions[modes[chosenMode]].format(trainerName)
+	messages.append({'trainer':trainerName, 'message':message})
 
 def startingPoint():
 	trainer1Index = int(round(random()*3))
@@ -48,7 +64,7 @@ def decideWinner(messages):
 
 def choosePokemon(pointPair, messages):
 	global trainerIndexes
-	global pokemonInBattleTrainer1, pokemonInBattleTrainer2
+	global pokemonInBattleTrainer1, pokemonInBattleTrainer2, letterLengthCounter
 	firstPair = pointPair[0]
 	secondPair = pointPair[1]
 	firstPokemonIndex = firstPair["x"] + 1
@@ -66,6 +82,7 @@ def choosePokemon(pointPair, messages):
 	pokemonInBattleTrainer2 = [firstPokemon, secondPokemon]
 	trainerName = trainers[trainerIndexes[1]]
 	messages.append({'trainer':trainerName, 'message':trainer_descriptions["chooses_2_pokemon"].format(trainerName, firstPokemon, secondPokemon)})
+	letterLengthCounter+=1
 
 def removeFromList(pokemonName, pokeList):
 	pokeList.remove(pokemonName)
