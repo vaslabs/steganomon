@@ -51,8 +51,10 @@
 
       <div ng-show="ctrl.isModeGenerate()">
         <h2 class="header">Story Mode - Generate your Story</h2>
-         
-        <textarea id="txt-plain" placeholder="ONLY [A-Za-z] alphanumeric input!"></textarea>
+        
+        <em>Please use the web tool only for small texts (50-60 characters ideally). You can use the CLI tools directly for any arbitrary size of text (hopefully;p). Find the code at <a href="https://github.com/vaslabs/steganomon">https://github.com/vaslabs/steganomon</a></em>
+
+        <textarea id="txt-plain" placeholder="ONLY [A-Za-z] alphanumeric input!" maxlength="70"></textarea>
         <a class="waves-effect waves-light btn" ng-click="ctrl.generateStory()">Generate story</a>
 
         <a class="waves-effect waves-light btn" ng-click="ctrl.toggleRawStory()">Toggle raw story JSON</a>

@@ -18,8 +18,6 @@ func main() {
 		b, err := ioutil.ReadAll(r.Body)
 		txt := string(b)
 
-		ioutil.WriteFile("my_plain_text.txt", []byte(txt), 0644)
-
 		cmd := exec.Command("./generateStory.sh")
 		stdin, err := cmd.StdinPipe()
 		if err != nil {
