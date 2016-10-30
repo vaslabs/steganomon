@@ -29,7 +29,10 @@ app.controller('MainController', function($q, $http) {
 
     ctrl.generateStory = function() {
         var txtPlain = document.querySelector('#txt-plain');
-        return fetchStory(txtPlain.value).then(function(story) {
+        var value = txtPlain.value;
+        var regex = /[^ a-zA-Z]/g;
+        value = value.replace(regex, '');
+        return fetchStory(value).then(function(story) {
             ctrl.activeStory = story;
         });
     };
