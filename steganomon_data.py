@@ -4,7 +4,7 @@ import random as Random
 import json
 from random import random
 pokemonNames = PokemonNames()
-
+pokemonNames.nameDict[122]="Mr. Mime"
 def generatePokemonIndex():
 	pokemonIndexDict = {}
 	for i in range(1,150):
@@ -19,7 +19,7 @@ def getPokemonMap():
     numbers1 = []
     numbers2 = []
     numbers3 = []
-    for num in range(1, 148):
+    for num in range(1, 150):
         if (num % 3 == 0):
             numbers3.append(num)
         elif (num % 2 == 0):

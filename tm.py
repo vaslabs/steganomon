@@ -79,12 +79,12 @@ def get_type_by_id(id):
     for entry in data_extended:
         keyint = int(entry['id'])
         if (keyint == id):
-            return type
+            return entry["type"]
 
 
 def get_any_attack_with_types(multiplier, types):
     global map
-    for try_number in range(1, 11):
+    for try_number in range(1, 30):
         choice = random.choice(map[multiplier-1])
         choice_type = get_type_by_id(choice)
         if choice_type in types or choice_type == 'Normal':
