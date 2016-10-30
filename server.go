@@ -14,7 +14,9 @@ type StoryMessage struct {
 
 func main() {
 	http.HandleFunc("/api/story", func(w http.ResponseWriter, r *http.Request) {
-		txt := r.FormValue("text")
+
+		b, err := ioutil.ReadAll(r.Body)
+		txt := string(b)
 
 		ioutil.WriteFile("my_plain_text.txt", []byte(txt), 0644)
 
@@ -57,7 +59,9 @@ func main() {
 	})
 
 	http.HandleFunc("/api/text", func(w http.ResponseWriter, r *http.Request) {
-		story := r.FormValue("story")
+		b, err := ioutil.ReadAll(r.Body)
+		story := string(b)
+
 		/*
 			messages := make([]StoryMessage, 0)
 			storyLines := strings.Split(story, "|")
