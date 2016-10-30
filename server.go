@@ -1,14 +1,11 @@
 package main
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os/exec"
-	"strings"
 )
 
 type StoryMessage struct {
@@ -21,66 +18,100 @@ func main() {
 
 		ioutil.WriteFile("my_plain_text.txt", []byte(txt), 0644)
 
-		_, err := exec.Command("./generateStory.sh").Output()
+		cmd := exec.Command("./generateStory.sh")
+		stdin, err := cmd.StdinPipe()
 		if err != nil {
 			fmt.Println(err)
 			panic(err)
 		}
-
-		b, err := ioutil.ReadFile("story.json")
+		_, err = stdin.Write([]byte(txt))
 		if err != nil {
+			fmt.Println(err)
 			panic(err)
 		}
+		stdin.Close()
 
-		var msgs []StoryMessage
-		err = json.Unmarshal(b, &msgs)
+		out, err := cmd.Output()
 		if err != nil {
+			fmt.Println(err)
 			panic(err)
 		}
-
-		var buffer bytes.Buffer
-		for _, m := range msgs {
-			_, errr := buffer.WriteString(m.Message + "|")
-			if errr != nil {
-				panic(errr)
+		/*
+			var msgs []StoryMessage
+			err = json.Unmarshal([]byte(out), &msgs)
+			if err != nil {
+				panic(err)
 			}
-		}
 
-		fmt.Fprintf(w, "%v", buffer.String())
+			var buffer bytes.Buffer
+			for _, m := range msgs {
+				_, errr := buffer.WriteString(m.Message + "|")
+				if errr != nil {
+					panic(errr)
+				}
+			}
+
+			fmt.Fprintf(w, "%v", buffer.String())
+		*/
+		fmt.Fprintf(w, "%v", string(out))
 	})
 
 	http.HandleFunc("/api/text", func(w http.ResponseWriter, r *http.Request) {
 		story := r.FormValue("story")
+		/*
+			messages := make([]StoryMessage, 0)
+			storyLines := strings.Split(story, "|")
+			for _, s := range storyLines {
+				messages = append(messages, StoryMessage{Message: s})
+			}
+			fmt.Println(len(storyLines))
 
-		messages := make([]StoryMessage, 0)
-		storyLines := strings.Split(story, "|")
-		for _, s := range storyLines {
-			messages = append(messages, StoryMessage{Message: s})
-		}
-		fmt.Println(len(storyLines))
+			b, err := json.Marshal(messages)
+			if err != nil {
+				panic(err)
+			}
+			ioutil.WriteFile("story_dec.json", b, 0644)
+		*/
 
-		b, err := json.Marshal(messages)
+		cmd := exec.Command("./decrypt_plain.sh")
+		stdin, err := cmd.StdinPipe()
 		if err != nil {
+			fmt.Println(err)
 			panic(err)
 		}
-		ioutil.WriteFile("story_dec.json", b, 0644)
+		_, err = stdin.Write([]byte(story))
+		if err != nil {
+			fmt.Println(err)
+			panic(err)
+		}
+		stdin.Close()
 
-		_, err = exec.Command("./decrypt_plain.sh").Output()
+		out, err := cmd.Output()
 		if err != nil {
 			fmt.Println(err)
 			panic(err)
 		}
 
-		// Read and return image
-		b, err = ioutil.ReadFile("img.png")
-		if err != nil {
-			panic(err)
-		}
+		w.Write(out)
 
-		w.Write(b)
+		/*
+			_, err = exec.Command("./decrypt_plain.sh").Output()
+			if err != nil {
+				fmt.Println(err)
+				panic(err)
+			}
+
+			// Read and return image
+			b, err = ioutil.ReadFile("img.png")
+			if err != nil {
+				panic(err)
+			}
+
+			w.Write(b)
+		*/
 	})
 
-	fs := http.FileServer(http.Dir("static"))
+	fs := http.FileServer(http.Dir("."))
 	http.Handle("/", fs)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
