@@ -33,6 +33,10 @@
           margin: 10px;
         }
 
+        a.btn {
+          margin-bottom: 5px;
+        }
+
       </style>
 
       <!--Import jQuery before materialize.js-->
@@ -47,8 +51,8 @@
       
     <div class="col s12 m6" id="app-container" ng-controller="MainController as ctrl">
 
-      <a class="waves-effect waves-light btn" ng-click="ctrl.selectMode ('generate')">Story Mode</a>
-      <a class="waves-effect waves-light btn" ng-click="ctrl.selectMode('decrypt')">Decrypt Mode</a>
+      <a class="waves-effect waves-light btn yellow darken-4" ng-click="ctrl.selectMode ('generate')">Story Mode</a>
+      <a class="waves-effect waves-light btn yellow darken-4" ng-click="ctrl.selectMode('decrypt')">Decrypt Mode</a>
 
       <div ng-show="ctrl.isModeGenerate()">
         <h2 class="header">Story Mode - Generate your Story</h2>
