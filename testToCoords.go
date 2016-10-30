@@ -101,6 +101,11 @@ var LETTER_TO_EDGES map[string][]Edge = map[string][]Edge{
 		E_LEFT, E_TOP, E_MIDDLE_H,
 		Edge{X1: 2, Y1: 2, X2: 2, Y2: 1},
 	},
+	"Q": []Edge{
+		E_LEFT, E_RIGHT,
+		E_TOP, E_BOTTOM,
+		Edge{X1: 1, Y1: 1, X2: 2, Y2: 0},
+	},
 	"R": []Edge{
 		E_LEFT,
 		E_TOP,
@@ -295,14 +300,54 @@ func readEdges() []ResultElement {
 	return result
 }
 
+type Point struct {
+	X int `json:"x"`
+	Y int `json:"y"`
+}
+
+func readEdgesPython() []ResultElement {
+	var result [][]Point
+
+	bio := bufio.NewReader(os.Stdin)
+	sc := bufio.NewScanner(bio)
+	for sc.Scan() {
+		line := sc.Text()
+		e := make([][]Point, 0)
+		if err := json.Unmarshal([]byte(line), &e); err != nil {
+			panic(err)
+		}
+		result = append(result, e...)
+	}
+
+	result2 := make([]ResultElement, 0)
+	for _, arr := range result {
+		re := ResultElement{
+			Edges: make([]Edge, 0),
+		}
+
+		for i := 0; i < len(arr); i += 2 {
+			re.Edges = append(re.Edges, Edge{
+				X1: arr[i].X, Y1: arr[i].Y,
+				X2: arr[i+1].X, Y2: arr[i+1].Y,
+			})
+		}
+
+		result2 = append(result2, re)
+	}
+	return result2
+}
+
 func main() {
 	textToEdgesF := flag.Bool("t2e", false, "Use to do text to edges transformation")
 	edgesToImageF := flag.Bool("e2i", false, "Use to do edges to image transformation")
+	edgesPythonToImageF := flag.Bool("ep2i", false, "Use to do python edges to image transformation")
 	flag.Parse()
 
 	if *textToEdgesF {
 		textToEdges()
 	} else if *edgesToImageF {
 		edgesToImageLines(readEdges())
+	} else if *edgesPythonToImageF {
+		edgesToImageLines(readEdgesPython())
 	}
 }
