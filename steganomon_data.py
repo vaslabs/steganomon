@@ -9,7 +9,7 @@ def generatePokemonIndex():
 	pokemonIndexDict = {}
 	for i in range(1,150):
 		pokemonIndexDict[pokemonNames.get_name(i)] = i
-
+		pokemonIndexDict[pokemonNames.get_name(i).decode('utf-8')] = i
 	return pokemonIndexDict
 
 pokemonIndex = generatePokemonIndex()
