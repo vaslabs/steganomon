@@ -1,4 +1,5 @@
 import json
+from steganomon_data import getPokemonIndex
 
 def getPokemonTypes():
 	with open('pokemon_data.json') as json_data:
@@ -9,6 +10,6 @@ pokemonTypes = getPokemonTypes()
 
 def getPokemonTypesFromPokemonName(pokemonName):
     global pokemonTypes
-    for entry in pokemonTypes:
-	    if (entry["name"] == pokemonName):
-		    return entry['types']
+    for entry in pokemonTypes:		
+        if (int(entry["id"]) == getPokemonIndex(pokemonName)):
+			return entry['types']
