@@ -107,7 +107,8 @@ def attack_first(messages, letterPointPair):
 		pokemonLostFor1+=1
 	else:
 		pokemonTargetName = pokemonInBattleTrainer2[pokemonTargetIndex]
-		attack = get_name_by_id(get_any_attack(nextAttackIndexOfFirstPokemon))
+		pokemonTypes = getPokemonTypesFromPokemonName(pokemonAttackingName)
+		attack = get_name_by_id(get_any_attack_with_types(nextAttackIndexOfFirstPokemon, pokemonTypes))
 		messages.append({'trainer':trainerName, 'message':attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName)})
 
 
@@ -122,7 +123,8 @@ def attack_first(messages, letterPointPair):
 		pokemonInBattleTrainer1.append(nextPokemon)
 		pokemonLostFor1+=1
 	else:
-		attack = get_name_by_id(get_any_attack(nextAttackIndexOfSecondPokemon))
+		pokemonTypes = getPokemonTypesFromPokemonName(pokemonAttackingName)
+		attack = get_name_by_id(get_any_attack_with_types(nextAttackIndexOfSecondPokemon, pokemonTypes))
 		messages.append({'trainer':trainerName, 'message':attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName)})
 
 def attack_second(messages, letterPointPair):
