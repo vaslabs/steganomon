@@ -101,6 +101,11 @@ var LETTER_TO_EDGES map[string][]Edge = map[string][]Edge{
 		E_LEFT, E_TOP, E_MIDDLE_H,
 		Edge{X1: 2, Y1: 2, X2: 2, Y2: 1},
 	},
+	"Q": []Edge{
+		E_LEFT, E_RIGHT,
+		E_TOP, E_BOTTOM,
+		Edge{X1: 1, Y1: 1, X2: 2, Y2: 0},
+	},
 	"R": []Edge{
 		E_LEFT,
 		E_TOP,
