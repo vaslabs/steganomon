@@ -1,6 +1,7 @@
 #!/usr/bin/python
 from pokemonNames.pokemonNames import PokemonNames
 import random as Random
+import json
 from random import random
 pokemonNames = PokemonNames()
 
@@ -44,6 +45,7 @@ def getPokemonIndex(pokemonName):
 	if (not pokemonName in pokemonIndex):
 		return 0
 	return pokemonIndex[pokemonName]
+
 
 
 attack_descriptions = {

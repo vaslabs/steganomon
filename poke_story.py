@@ -1,7 +1,8 @@
 #!/usr/bin/python
 from steganomon_data import *
 from random import random
-from tm import get_any_attack, get_name_by_id
+from tm import get_any_attack, get_name_by_id, get_any_attack_with_types
+from pokemon import getPokemonTypesFromPokemonName
 
 trainerIndexes = []
 
@@ -143,7 +144,8 @@ def attack_second(messages, letterPointPair):
 		pokemonInBattleTrainer2.append(nextPokemon)
 		pokemonLostFor2+=1
 	else:
-		attack = get_name_by_id(get_any_attack(nextAttackIndexOfFirstPokemon))
+		pokemonTypes = getPokemonTypesFromPokemonName(pokemonAttackingName)
+		attack = get_name_by_id(get_any_attack_with_types(nextAttackIndexOfFirstPokemon, pokemonTypes))
 		messages.append({'trainer':trainerName, 'message':attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName)})
 
 	pokemonTargetName = pokemonInBattleTrainer1[pokemonTargetIndex-1]
@@ -157,7 +159,8 @@ def attack_second(messages, letterPointPair):
 		pokemonInBattleTrainer2.append(nextPokemon)
 		pokemonLostFor2+=1
 	else:
-		attack = get_name_by_id(get_any_attack(nextAttackIndexOfSecondPokemon))
+		pokemonTypes = getPokemonTypesFromPokemonName(pokemonAttackingName)
+		attack = get_name_by_id(get_any_attack_with_types(nextAttackIndexOfSecondPokemon, pokemonTypes))
 		messages.append({'trainer':trainerName, 'message':attack_descriptions["attacking"].format(pokemonAttackingName, attack, pokemonTargetName)})
 
 
